@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\Agent;
 use App\Models\Student;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -54,7 +53,7 @@ class AuthController extends Controller
             'password' => ['required', 'confirmed', Password::min(8)],
         ]);
 
-        $student = Agent::create($data);
+        $student = Student::create($data);
 
         $student->user()->create($data);
 

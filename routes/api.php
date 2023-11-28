@@ -30,21 +30,36 @@ Route::controller(App\Http\Controllers\Api\Auth\AuthController::class)->prefix('
    Route::post('/logout', 'logout')->middleware('auth:sanctum');
 });
 
-// Routes du contrôleur AgentController avec le middleware auth:sanctum
+
 Route::middleware(['auth:sanctum'])->group(function () {
-   Route::apiResource('agents', App\Http\Controllers\Api\AgentController::class);
-   Route::apiResource('roles', RoleController::class); // Routes du contrôleur RoleController avec le middleware auth:sanctum
-  
-  
+    // Routes du contrôleur AgentController avec le middleware auth:sanctum
+    Route::apiResource('agents', App\Http\Controllers\Api\AgentController::class);
+    // Routes du contrôleur RoleController avec le middleware auth:sanctum
+    Route::apiResource('roles', RoleController::class);
+    // Routes du contrôleur StudentController
+    Route::apiResource('students', App\Http\Controllers\Api\StudentController::class);
+
+
+
+    Route::post('trajets/search', [TrajetController::class, 'search']);
+
+    Route::apiResource('trajets', TrajetController::class);
+    Route::resource('chauffeurs', ChauffeurController::class);
+    Route::resource('buses', BusController::class);
+    Route::get('buses/trashed', [BusController::class, 'indexTrashed']);
+    Route::get('buses/not-trashed', [BusController::class, 'indexNotTrashed']);
+
 });
 
-// Routes du contrôleur StudentController
-Route::apiResource('students', App\Http\Controllers\Api\StudentController::class);
 
-Route::post('trajets/search', [TrajetController::class, 'search']);
 
-Route::apiResource('trajets', TrajetController::class);
-Route::resource('chauffeurs', ChauffeurController::class);
-Route::resource('buses', BusController::class);
-Route::get('buses/trashed', [BusController::class, 'indexTrashed']);
-Route::get('buses/not-trashed', [BusController::class, 'indexNotTrashed']);
+
+
+
+
+
+
+
+
+
+
