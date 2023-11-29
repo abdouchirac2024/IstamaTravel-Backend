@@ -49,9 +49,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
     // Routes du contrôleur AgentController avec le middleware auth:sanctum
     Route::apiResource('agents', App\Http\Controllers\Api\AgentController::class);
     // Routes du contrôleur RoleController avec le middleware auth:sanctum
-    Route::apiResource('roles', RoleController::class);
+
     // Routes du contrôleur StudentController
     Route::apiResource('students', App\Http\Controllers\Api\StudentController::class);
+
 
 
 
@@ -65,8 +66,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
 });
 Route::post('/password/reset', 'AuthController@resetPassword');
-
-
+Route::apiResource('roles', App\Http\Controllers\Api\RoleController::class);
 
 
 
