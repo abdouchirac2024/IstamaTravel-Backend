@@ -17,7 +17,7 @@ class Agent extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'role_id',
+        'role_id'
     ];
 
     protected $with = ['user', 'role'];

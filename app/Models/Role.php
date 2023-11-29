@@ -1,5 +1,10 @@
 <?php
 
+
+
+
+// App\Models\Role.php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -8,7 +13,7 @@ use Illuminate\Database\Eloquent\Model;
 class Role extends Model
 {
     use HasFactory;
-    protected $table = 'roles'; // Remplacez 'roles' par le nom réel de votre table
+
     /**
      * The attributes that are mass assignable.
      *
@@ -17,4 +22,14 @@ class Role extends Model
     protected $fillable = [
         'name',
     ];
+
+    /**
+     * Get the agents for the role.
+     */
+    public function agents()
+    {
+        return $this->hasMany(Agent::class);
+    }
 }
+
+
