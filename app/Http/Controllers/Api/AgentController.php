@@ -36,6 +36,7 @@ class AgentController extends Controller
             'email' => 'required|email|unique:users,email',
             'phone_number' => 'required|string|min:9|max:15',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'password' => ['required', 'confirmed', 'min:8'],
             'active' => 'boolean',
             // Ajoutez d'autres règles de validation au besoin pour d'autres champs.
         ]);
