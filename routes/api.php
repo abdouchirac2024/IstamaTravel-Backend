@@ -47,7 +47,7 @@ Route::controller(App\Http\Controllers\Api\Auth\AuthController::class)->prefix('
 
 Route::middleware(['auth:sanctum'])->group(function () {
     // Routes du contrôleur AgentController avec le middleware auth:sanctum
-    Route::apiResource('agents', App\Http\Controllers\Api\AgentController::class);
+    // Route::apiResource('agents', App\Http\Controllers\Api\AgentController::class);
     // Routes du contrôleur RoleController avec le middleware auth:sanctum
 
     // Routes du contrôleur StudentController
@@ -71,7 +71,7 @@ Route::apiResource('roles', App\Http\Controllers\Api\RoleController::class);
 
 
 
-
+Route::apiResource('agents', App\Http\Controllers\Api\AgentController::class);
 
 
 
