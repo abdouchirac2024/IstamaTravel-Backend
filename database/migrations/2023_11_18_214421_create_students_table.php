@@ -13,10 +13,11 @@ return new class extends Migration
     {
         Schema::create('students', function (Blueprint $table) {
             $table->id();
-            $table->string('matricule');
+            $table->string('matricule')->unique(); // Ajout de la contrainte d'unicité
             $table->timestamps();
         });
     }
+
 
     /**
      * Reverse the migrations.

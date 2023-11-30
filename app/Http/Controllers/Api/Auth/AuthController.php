@@ -107,7 +107,6 @@ class AuthController extends Controller
         return response()->json(['message' => 'Authentification Facebook réussie']);
     }
 
-
     public function register(Request $request)
     {
         $data = $request->validate([
@@ -119,15 +118,19 @@ class AuthController extends Controller
             'password' => ['required', 'confirmed', 'min:8'],
         ]);
 
+
+
         $student = Student::create($data);
 
-        $student->user()->create($data);
+        // Créez d'abord l'utilisateur avant d'envoyer l'e-mail
+        $user = $student->user()->create($data);
 
-        // Send welcome email to the new user
-        Mail::to($student->email)->cc('yohivana237@gmail.com')->send(new WelcomeEmail($student));
+        // Envoyez l'e-mail de bienvenue à l'utilisateur avec le mot de passe non chiffré
+        Mail::to($user->email)->send(new WelcomeEmail($student));
 
         return response()->json($student);
     }
+
 
     public function logout(Request $request)
     {
