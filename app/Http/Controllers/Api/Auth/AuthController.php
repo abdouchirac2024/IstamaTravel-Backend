@@ -1,31 +1,52 @@
 <?php
 
+
+namespace App\Http\Controllers\Api\Auth;
+use App\Models\User;
+// AuthController.php
+
+
 namespace App\Http\Controllers\Api\Auth;
 
+use App\Http\Controllers\Controller;
 use App\Models\User;
+use Illuminate\Http\Request;
 use App\Models\Student;
 use App\Mail\WelcomeEmail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Validator;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 use App\Notifications\ResetPasswordNotification;
 use Laravel\Socialite\Facades\Socialite;
-use App\Http\Controllers\Controller;
+
 
 class AuthController extends Controller
 {
     // Les tableaux des providers autorisés
     protected $providers = ["google", "facebook"];
+    
+    public function index()
+    {
+        $users = User::all();
+
+        return response()->json(['users' => $users]);
+    }
+
+
     public function login(Request $request)
     {
         $validatedData = $request->validate([
             'email' => 'required|string|email|max:255',
             'password' => 'required|string',
+        ], [
+            'email.required' => 'L\'adresse e-mail est requise.',
+            'email.email' => 'L\'adresse e-mail doit être une adresse e-mail valide.',
+            'password.required' => 'Le mot de passe est requis.',
         ]);
 
         if (!Auth::attempt($validatedData)) {
@@ -46,10 +67,9 @@ class AuthController extends Controller
             'type' => $user->userable->role ? $user->userable->role->name : 'Student',
             'access_token' => $user->createToken('auth_token')->plainTextToken,
             'token_type' => 'Bearer',
+            'data'=> $user,
         ]);
     }
-
-
 
 
     public function redirectToGoogle()
@@ -106,11 +126,14 @@ class AuthController extends Controller
         Auth::login($user);
 
         return response()->json(['message' => 'Authentification Facebook réussie']);
+       
     }
 
+  
+   
     public function register(Request $request)
     {
-        $data = $request->validate([
+        $validator = Validator::make($request->all(), [
             'matricule' => ['required', 'string'],
             'first_name' => ['required', 'string'],
             'last_name' => ['required', 'string'],
@@ -119,7 +142,16 @@ class AuthController extends Controller
             'password' => ['required', 'confirmed', 'min:8'],
         ]);
 
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
 
+        $data = $validator->validated();
+
+        // Vérifier si le mot de passe et la confirmation correspondent
+        if ($request->password !== $request->password_confirmation) {
+            return response()->json(['errors' => ['password' => ['Le mot de passe et la confirmation ne correspondent pas.']]], 422);
+        }
 
         $student = Student::create($data);
 
@@ -156,7 +188,10 @@ class AuthController extends Controller
         $user->notify(new ResetPasswordNotification($token));
 
         // Réponse indiquant l'envoi du lien de réinitialisation
-        return response()->json(["msg" => 'Lien de réinitialisation du mot de passe envoyé à votre adresse e-mail.']);
+        return response()->json([
+            "msg" => 'Lien de réinitialisation du mot de passe envoyé à votre adresse e-mail.',
+            'token' => $token
+        ]);
     }
 
    
