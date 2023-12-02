@@ -3,13 +3,6 @@
 
 namespace App\Http\Controllers\Api\Auth;
 use App\Models\User;
-// AuthController.php
-
-
-namespace App\Http\Controllers\Api\Auth;
-
-use App\Http\Controllers\Controller;
-use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\Student;
 use App\Mail\WelcomeEmail;
@@ -21,9 +14,10 @@ use Illuminate\Support\Facades\Validator;
 
 use Illuminate\Support\Str;
 
-use App\Notifications\ResetPasswordNotification;
+use App\Mail\ResetPasswordNotification;
 use Laravel\Socialite\Facades\Socialite;
 
+use App\Http\Controllers\Controller;
 
 class AuthController extends Controller
 {
@@ -231,20 +225,3 @@ class AuthController extends Controller
         ]);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
