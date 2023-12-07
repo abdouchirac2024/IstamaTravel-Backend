@@ -37,4 +37,9 @@ class Agent extends Model
     {
         return $this->belongsTo(Role::class);
     }
+    // Relation avec Chauffeur (hasOne)
+    public function chauffeur()
+    {
+        return $this->hasOne(Chauffeur::class, 'agent_id');
+    }
 }
