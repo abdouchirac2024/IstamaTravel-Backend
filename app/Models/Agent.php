@@ -18,6 +18,7 @@ class Agent extends Model
      */
     protected $fillable = [
         'role_id'
+        
     ];
 
     protected $with = ['user', 'role'];
