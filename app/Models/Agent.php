@@ -2,45 +2,39 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Agent extends Model
 {
     use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
-        'role_id'
-        
+        'type_id',
+        'driving_license'
     ];
 
-    protected $with = ['user', 'role'];
+    protected $with = ['user', 'type'];
 
     /**
-     * Get the agent's user information.
+     * Get User:Model information
+     *
+     * @return MorphOne
      */
     public function user(): MorphOne
     {
-        return $this->morphOne(User::class, "userable");
+        return $this->morphOne(User::class, 'userable');
     }
 
     /**
-     * Get the role information.
+     * Get Type for agent
+     *
+     * @return BelongsTo
      */
-    public function role(): BelongsTo
+    public function type(): BelongsTo
     {
-        return $this->belongsTo(Role::class);
-    }
-    // Relation avec Chauffeur (hasOne)
-    public function chauffeur()
-    {
-        return $this->hasOne(Chauffeur::class, 'agent_id');
+        return $this->belongsTo(Type::class);
     }
 }

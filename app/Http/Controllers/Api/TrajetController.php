@@ -16,7 +16,20 @@ class TrajetController extends Controller
 
     public function store(Request $request)
     {
-        $trajet = Trajet::create($request->all());
+        $validatedData = $request->validate([
+            'ref' => 'required|string',
+            'start' => 'required|timestamp',
+            'end' => 'required|timestamp',
+            'status' => 'in:active,inactive',
+            'route_id' => 'required|exists:routes,id',
+            'bus_id' => 'required|exists:buses,id',
+            'agent_id' => 'required|exists:agents,id',
+        ]);
+
+        // Définit la valeur par défaut du statut à 'active' si non spécifié dans la requête
+        $validatedData['status'] = $request->input('status', 'active');
+
+        $trajet = Trajet::create($validatedData);
         return response()->json(['message' => 'Trajet créé avec succès', 'data' => $trajet], 201);
     }
 
@@ -27,7 +40,19 @@ class TrajetController extends Controller
 
     public function update(Request $request, Trajet $trajet)
     {
-        $trajet->update($request->all());
+        $validatedData = $request->validate([
+            'ref' => 'string',
+            'start' => 'timestamp',
+            'end' => 'timestamp',
+            'status' => 'in:active,inactive',
+            'route_id' => 'exists:routes,id',
+            'bus_id' => 'exists:buses,id',
+            'agent_id' => 'exists:agents,id',
+        ]);
+
+        // Mise à jour du trajet avec les données validées
+        $trajet->update($validatedData);
+
         return response()->json(['message' => 'Trajet mis à jour avec succès', 'data' => $trajet], 200);
     }
 
@@ -35,7 +60,23 @@ class TrajetController extends Controller
     {
         $trajet->delete();
         return response()->json(['message' => 'Trajet supprimé avec succès'], 204);
+    }
 
-        
+    public function search(Request $request)
+    {
+        $perPage = $request->input('per_page', 10);
+        $query = $request->input('query', '');
+
+        $trajets = Trajet::query();
+
+        if ($query) {
+            $trajets->where('ref', 'like', '%' . $query . '%')
+                ->orWhere('status', 'like', '%' . $query . '%');
+            // Ajoutez d'autres champs de recherche si nécessaire
+        }
+
+        $trajets = $trajets->paginate($perPage);
+
+        return response()->json(['message' => 'Résultats de recherche récupérés avec succès', 'data' => $trajets], 200);
     }
 }

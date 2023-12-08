@@ -2,24 +2,23 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Bus extends Model
+class Route extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'matricule',
-        'brand',
-        'photo',
-        'model',
-        'seat',
+        'name',
+        'from',
+        'to',
+        'cost',
     ];
 
     /**
-     * Get trajets for the bus
+     * Get trajets for the route
      *
      * @return HasMany
      */

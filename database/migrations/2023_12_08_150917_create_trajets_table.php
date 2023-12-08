@@ -4,7 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     /**
      * Run the migrations.
      */
@@ -12,11 +13,13 @@ return new class extends Migration {
     {
         Schema::create('trajets', function (Blueprint $table) {
             $table->id();
-            $table->string('lieuxdepart');
-            $table->string('lieuxArrivee');
-            $table->decimal('tarification', 10, 2)->default(200);
-            $table->dateTime('dateheureDepart');
-            $table->dateTime('dateheureArrivee');
+            $table->string('ref');
+            $table->timestamp('start');
+            $table->timestamp('end');
+            $table->integer('status');
+            $table->foreignId('route_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('bus_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('agent_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }

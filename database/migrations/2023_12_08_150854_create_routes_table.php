@@ -11,8 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('chauffeurs', function (Blueprint $table) {
-            $table->string('numero_permis')->unique()->change();
+        Schema::create('routes', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('from');
+            $table->string('to');
+            $table->float('cost');
+            $table->timestamps();
         });
     }
 
@@ -21,8 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('chauffeurs', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('routes');
     }
 };

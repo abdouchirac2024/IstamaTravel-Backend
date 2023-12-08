@@ -2,19 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Student extends Model
 {
     use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
         'matricule',
     ];
@@ -22,10 +17,12 @@ class Student extends Model
     protected $with = ['user'];
 
     /**
-     * Get the student's user information.
+     * Get User:Model information
+     *
+     * @return MorphOne
      */
     public function user(): MorphOne
     {
-        return $this->morphOne(User::class, "userable");
+        return $this->morphOne(User::class, 'userable');
     }
 }

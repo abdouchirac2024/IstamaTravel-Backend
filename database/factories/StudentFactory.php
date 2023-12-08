@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +18,7 @@ class StudentFactory extends Factory
     public function definition(): array
     {
         return [
-            'matricule' => $this->faker->ean13()
+            'matricule' => Str::random(10)
         ];
     }
 }

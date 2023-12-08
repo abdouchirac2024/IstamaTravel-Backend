@@ -11,12 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('sieges', function (Blueprint $table) {
+        Schema::create('agents', function (Blueprint $table) {
             $table->id();
-            $table->integer('numero')->unique();
-            $table->enum('statut', ['libre', 'occupé'])->default('libre');
-            $table->foreignId('buse_id')->constrained('buses')->cascadeOnDelete();
-            $table->softDeletes();
+            $table->foreignId('type_id')->constrained()->cascadeOnDelete();
+            $table->string('driving_license')->nullable();
             $table->timestamps();
         });
     }
@@ -26,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('sieges');
+        Schema::dropIfExists('agents');
     }
 };
