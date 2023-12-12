@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api\Auth;
 use App\Models\User;
 use App\Models\Student;
 use App\Mail\WelcomeEmail;
-// use App\Services\TwilioService;
+use App\Services\TwilioService;
 
 
 use App\Mail\ResetPasswordNotification;
@@ -75,9 +75,9 @@ class AuthController extends Controller
 
 
         // Envoi de l'e-mail de bienvenue
-        // Mail::to($user->email)->send(new WelcomeEmail($student));
+         Mail::to($user->email)->send(new WelcomeEmail($student));
         // Envoyer un SMS de bienvenue
-        $this->sendWelcomeSMS($user->phone, $user->first_name);
+        // $this->sendWelcomeSMS($user->phone, $user->first_name);
 
         return response()->json($student);
     }
