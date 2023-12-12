@@ -39,11 +39,11 @@ class AuthController extends Controller
             'matricule' => ['required', 'string', 'unique:students,matricule,except,id'],
             'first_name' => ['required', 'string'],
             'last_name' => ['required', 'string'],
-            'gender' => ['required', 'string'],
+            'gender' => ['nullable', 'string'],
             'phone' => ['required', 'string', 'min:9', 'max:15', 'unique:users,phone'],
 
             // 'phone' => ['required', 'string', 'min:9', 'max:15'],
-            'address' => ['required', 'string'],
+            'address' => ['nullable', 'string'],
             // 'image' => ['nullable', 'string'],
             'image' => ['nullable', 'mimes:jpg,png,gif'],
 
