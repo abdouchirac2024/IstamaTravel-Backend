@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('matricule')->unique();
             $table->string('photo');
 
-            $table->string('status')->default('active');
+            $table->string('status')->default('actif');
 
 
             $table->string('brand');
