@@ -63,7 +63,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResource('agents', AgentController::class);
     // Ressources pour les agents/drvers
     Route::get('/drivers', [AgentController::class, 'drivers']);
-    // Routes pour le contrôleur TypeController
+
+
+    // Routes pour le contrôleur TypeController      use App\Http\Controllers\Api\TypeController;
     Route::get('types', [TypeController::class, 'indexNotTrashed']);
     Route::get('types/trashed', [TypeController::class, 'indexTrashed']);
     Route::post('types', [TypeController::class, 'store']);
