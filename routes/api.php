@@ -81,12 +81,15 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
 
         // BUS
-        Route::get('/buses/trashed', [BusController::class, 'indexTrashed']);
-        Route::get('/buses/not-trashed', [BusController::class, 'indexNotTrashed']);
-        Route::post('/buses', [BusController::class, 'store']);
-        Route::put('/buses/{bus}', [BusController::class, 'update']);
-        Route::delete('/buses/{bus}', [BusController::class, 'destroy']);
-        Route::post('/buses/search', [BusController::class, 'search']);
+       Route::get('/buses', [BusController::class, 'index']); // Lister tous les bus
+Route::get('/buses/trashed', [BusController::class, 'indexTrashed']); // Lister tous les bus supprimés
+Route::get('/buses/not-trashed', [BusController::class, 'indexNotTrashed']); // Lister tous les bus non supprimés
+Route::post('/buses', [BusController::class, 'store']); // Créer un nouveau bus
+Route::get('/buses/{bus}', [BusController::class, 'show']); // Afficher les détails d'un bus spécifique
+Route::put('/buses/{bus}', [BusController::class, 'update']); // Mettre à jour les informations d'un bus spécifique
+Route::delete('/buses/{bus}', [BusController::class, 'destroy']); // Désactiver un bus (le placer dans la corbeille)
+Route::post('/buses/search', [BusController::class, 'search']); // Rechercher des bus en fonction de critères spécifiques
+
 
             // Routes pour les trajets
             Route::get('/trajets', [TrajetController::class, 'index']);
