@@ -76,7 +76,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     //route
         Route::resource('routes', RouteController::class);
-        Route::get('routes/search', [RouteController::class, 'search']);
+        Route::get('/routes/search', [RouteController::class, 'search']);
+//Route::get('/routes/search', 'Api\RouteController@search');
+
         Route::get('routes/paginate', [RouteController::class, 'paginate']);
 
 
