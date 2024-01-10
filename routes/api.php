@@ -77,7 +77,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     //route
 
     Route::resource('routes', RouteController::class);
-    // Route::put('routes/{id}', 'RouteController@update')->name('routes.update');
+
 
     Route::get('/routes/search', [RouteController::class, 'search']);
 
