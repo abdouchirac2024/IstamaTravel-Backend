@@ -75,48 +75,44 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('types/paginate', [TypeController::class, 'paginate']);
 
     //route
-        Route::resource('routes', RouteController::class);
-        Route::get('/routes/search', [RouteController::class, 'search']);
-//Route::get('/routes/search', 'Api\RouteController@search');
 
-        Route::get('routes/paginate', [RouteController::class, 'paginate']);
+    Route::resource('routes', RouteController::class);
 
 
-        // BUS
-       Route::get('/buses', [BusController::class, 'index']); // Lister tous les bus
-Route::get('/buses/trashed', [BusController::class, 'indexTrashed']); // Lister tous les bus supprimés
-Route::get('/buses/not-trashed', [BusController::class, 'indexNotTrashed']); // Lister tous les bus non supprimés
-Route::post('/buses', [BusController::class, 'store']); // Créer un nouveau bus
-Route::get('/buses/{bus}', [BusController::class, 'show']); // Afficher les détails d'un bus spécifique
-Route::put('/buses/{bus}', [BusController::class, 'update']); // Mettre à jour les informations d'un bus spécifique
-Route::delete('/buses/{bus}', [BusController::class, 'destroy']); // Désactiver un bus (le placer dans la corbeille)
-Route::post('/buses/search', [BusController::class, 'search']); // Rechercher des bus en fonction de critères spécifiques
+    Route::get('/routes/search', [RouteController::class, 'search']);
 
 
-            // Routes pour les trajets
-            Route::get('/trajets', [TrajetController::class, 'index']);
-            Route::post('/trajets', [TrajetController::class, 'store']);
-            Route::get('/trajets/{trajet}', [TrajetController::class, 'show']);
-            Route::put('/trajets/{trajet}', [TrajetController::class, 'update']);
-            Route::delete('/trajets/{trajet}', [TrajetController::class, 'destroy']);
-            Route::post('/trajets/search', [TrajetController::class, 'search']);
-              // Mise à jour du profil
-              Route::put('/update-profile', [AuthController::class, 'updateProfile']);
-
-              // Suppression du compte
-              Route::delete('/delete-account', [AuthController::class, 'deleteAccount']);
-
-              // Récupération du profil utilisateur par ID
-              Route::get('/user-profile/{userId}', [AuthController::class, 'getUserProfile']);
-
-        });
-
-    // Routes publiques (non protégées par Sanctum)
-    Route::get('/buses', [BusController::class, 'index']);
-    Route::get('/buses/{bus}', [BusController::class, 'show']);
+    Route::get('routes/paginate', [RouteController::class, 'paginate']);
 
 
+    // BUS
+    Route::get('/buses', [BusController::class, 'index']); // Lister tous les bus
+    Route::get('/buses/trashed', [BusController::class, 'indexTrashed']); // Lister tous les bus supprimés
+    Route::get('/buses/not-trashed', [BusController::class, 'indexNotTrashed']); // Lister tous les bus non supprimés
+    Route::post('/buses', [BusController::class, 'store']); // Créer un nouveau bus
+    Route::get('/buses/{bus}', [BusController::class, 'show']); // Afficher les détails d'un bus spécifique
+    Route::put('/buses/{bus}', [BusController::class, 'update']); // Mettre à jour les informations d'un bus spécifique
+    Route::delete('/buses/{bus}', [BusController::class, 'destroy']); // Désactiver un bus (le placer dans la corbeille)
+    Route::post('/buses/search', [BusController::class, 'search']); // Rechercher des bus en fonction de critères spécifiques
 
 
+    // Routes pour les trajets
+    Route::get('/trajets', [TrajetController::class, 'index']);
+    Route::post('/trajets', [TrajetController::class, 'store']);
+    Route::get('/trajets/{trajet}', [TrajetController::class, 'show']);
+    Route::put('/trajets/{trajet}', [TrajetController::class, 'update']);
+    Route::delete('/trajets/{trajet}', [TrajetController::class, 'destroy']);
+    Route::post('/trajets/search', [TrajetController::class, 'search']);
+    // Mise à jour du profil
+    Route::put('/update-profile', [AuthController::class, 'updateProfile']);
 
+    // Suppression du compte
+    Route::delete('/delete-account', [AuthController::class, 'deleteAccount']);
 
+    // Récupération du profil utilisateur par ID
+    Route::get('/user-profile/{userId}', [AuthController::class, 'getUserProfile']);
+});
+
+// Routes publiques (non protégées par Sanctum)
+Route::get('/buses', [BusController::class, 'index']);
+Route::get('/buses/{bus}', [BusController::class, 'show']);

@@ -48,6 +48,10 @@ class RouteController extends Controller
             'cost' => 'required|numeric',
         ]);
 
+        if (!$route) {
+            return response()->json(['message' => 'Route not found'], 404);
+        }
+
         $route->update([
             'name' => $request->input('name'),
             'from' => $request->input('from'),
@@ -64,7 +68,7 @@ class RouteController extends Controller
         return response()->json(['message' => 'Route supprimée avec succès'], 200);
     }
 
- 
+
 
 
     public function search(Request $request)
