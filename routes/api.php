@@ -44,13 +44,11 @@ Route::prefix('auth')->group(function () {
     Route::get('/login/google/callback', [AuthController::class, 'handleGoogleCallback']);
     Route::get('/login/facebook', [AuthController::class, 'redirectToFacebook']);
     Route::get('/login/facebook/callback', [AuthController::class, 'handleFacebookCallback']);
+
 });
 
 
-
-
-
-// Routes protégées nécessitant une authentification sanctum
+// Routes des utilisateurs
 Route::middleware(['auth:sanctum'])->group(function () {
     // Route pour obtenir les informations de l'utilisateur actuellement authentifié
     Route::get('/user', function (Request $request) {
