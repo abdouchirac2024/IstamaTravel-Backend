@@ -26,7 +26,8 @@ use App\Http\Controllers\Api\Auth\AuthController;
 Route::prefix('auth')->group(function () {
     // Connexion
     Route::post('/login', [AuthController::class, 'login']);
-
+      // Mise à jour du profil
+      Route::put('/update-profile', [AuthController::class, 'updateProfile'])->middleware('auth:sanctum');
     // Inscription
     Route::post('/register', [AuthController::class, 'register']);
 
@@ -60,8 +61,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
 
 
-    // Mise à jour du profil
-    Route::put('/update-profile', [AuthController::class, 'updateProfile']);
+
 
     // Suppression du compte
     Route::delete('/delete-account', [AuthController::class, 'deleteAccount']);
@@ -134,7 +134,3 @@ Route::middleware(['agent','auth:sanctum'])->group(function () {
 
 
 
-
-// Routes publiques (non protégées par Sanctum)
-// Route::get('/buses', [BusController::class, 'index']);
-// Route::get('/buses/{bus}', [BusController::class, 'show']);

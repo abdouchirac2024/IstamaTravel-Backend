@@ -31,8 +31,6 @@ class AuthController extends Controller
     //     $this->twilioService = $twilioService;
     // }
 
-
-
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -68,10 +66,6 @@ class AuthController extends Controller
         $student = Student::create($data);
         $data['password'] = Hash::make($data['password']);
         $user = $student->user()->create($data);
-
-
-
-
 
 
         // Envoi de l'e-mail de bienvenue
@@ -226,32 +220,61 @@ class AuthController extends Controller
     }
 
 
+
+
+
     public function updateProfile(Request $request)
     {
-        $user = auth()->user();
+        // Récupérer l'utilisateur par son ID
+        $user = User::find(auth()->id());
+
+        if (!$user) {
+            return response()->json(['error' => 'Utilisateur non trouvé.'], 404);
+        }
 
         $request->validate([
             'first_name' => 'required|string',
             'last_name' => 'required|string',
-            'phone_number' => 'required|string',
+            'phone' => 'required|string',
             'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        $user->update($request->only(['first_name', 'last_name', 'phone_number']));
+        try {
+            $user->update([
+                'first_name' => $request->input('first_name'),
+                'last_name' => $request->input('last_name'),
+                'phone' => $request->input('phone'),
+            ]);
 
-        if ($request->hasFile('image')) {
-            $file = $request->file('image');
-            $filename = time() . $file->getClientOriginalName();
-            $file->storeAs('public/images', $filename);
+            if ($request->hasFile('image')) {
+                $file = $request->file('image');
+                $filename = time() . $file->getClientOriginalName();
 
-            if ($user->image) {
-                Storage::delete('public/' . $user->image);
+                // Stocker l'image dans le dossier storage/app/public/images
+                $file->storeAs('public/images', $filename);
+
+                // Supprimer l'ancienne image si elle existe
+                if ($user->image) {
+                    Storage::delete('public/' . $user->image);
+                }
+
+                // Mettre à jour le chemin de l'image dans la base de données
+                $user->image = 'images/' . $filename;
+                $user->save();
             }
 
-            $user->image = 'images/' . $filename;
-            $user->save();
+            return response()->json($user);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Une erreur est survenue lors de la mise à jour du profil.'], 500);
         }
-
-        return response()->json(['message' => 'Profil mis à jour avec succès']);
     }
+
+
+
+
+
+
+
+
+
 }
