@@ -13,13 +13,14 @@ return new class extends Migration
     {
         Schema::create('trajets', function (Blueprint $table) {
             $table->id();
-            $table->string('ref');
+            $table->string('refTrajet');
             $table->timestamp('start');
             $table->timestamp('end');
             $table->integer('status');
             $table->foreignId('route_id')->constrained()->cascadeOnDelete();
             $table->foreignId('bus_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('agent_id')->constrained()->cascadeOnDelete();
+         $table->foreignId('agent_id')->constrained()->cascadeOnDelete();
+
             $table->timestamps();
         });
     }

@@ -218,11 +218,6 @@ class AuthController extends Controller
 
         return response()->json(['data' => $user]);
     }
-
-
-
-
-
     public function updateProfile(Request $request)
     {
         // Récupérer l'utilisateur par son ID
@@ -231,40 +226,60 @@ class AuthController extends Controller
         if (!$user) {
             return response()->json(['error' => 'Utilisateur non trouvé.'], 404);
         }
-
+         // Afficher les informations de l'objet `UploadedFile`
+         //dd($request->file('image'));
+        // Validation des données
         $request->validate([
             'first_name' => 'required|string',
             'last_name' => 'required|string',
             'phone' => 'required|string',
-            'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'gender' => 'required|string',
+            'address' => 'required|string',
+            'image' => 'sometimes|nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'password' => 'nullable|min:6', // Champ password optionnel avec une longueur minimale de 6 caractères
         ]);
 
         try {
-            $user->update([
+            // Données de l'utilisateur
+            $userData = [
                 'first_name' => $request->input('first_name'),
                 'last_name' => $request->input('last_name'),
                 'phone' => $request->input('phone'),
-            ]);
+                'gender' => $request->input('gender'),
+                'address' => $request->input('address'),
+            ];
 
+            // Mise à jour du mot de passe si fourni
+            if ($request->filled('password')) {
+                $userData['password'] = Hash::make($request->input('password'));
+            }
+
+            // Mise à jour des données de l'utilisateur
+            $user->update($userData);
+
+            // Traitement de l'image (si fournie)
             if ($request->hasFile('image')) {
                 $file = $request->file('image');
+
                 $filename = time() . $file->getClientOriginalName();
 
-                // Stocker l'image dans le dossier storage/app/public/images
+                // Stockage de l'image
                 $file->storeAs('public/images', $filename);
 
-                // Supprimer l'ancienne image si elle existe
+                // Suppression de l'ancienne image si elle existe
                 if ($user->image) {
                     Storage::delete('public/' . $user->image);
                 }
 
-                // Mettre à jour le chemin de l'image dans la base de données
+                // Mise à jour du chemin de l'image
                 $user->image = 'images/' . $filename;
                 $user->save();
             }
 
-            return response()->json($user);
+            // Réponse JSON
+            return response()->json(['message' => 'Profil mis à jour avec succès', 'user' => $user]);
         } catch (\Exception $e) {
+            // Erreur interne
             return response()->json(['error' => 'Une erreur est survenue lors de la mise à jour du profil.'], 500);
         }
     }
@@ -272,9 +287,7 @@ class AuthController extends Controller
 
 
 
+    }
 
 
 
-
-
-}

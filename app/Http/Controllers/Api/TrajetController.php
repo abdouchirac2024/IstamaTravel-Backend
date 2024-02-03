@@ -17,13 +17,22 @@ class TrajetController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'ref' => 'required|string',
-            'start' => 'required|timestamp',
-            'end' => 'required|timestamp',
-            'status' => 'in:active,inactive',
+            'refTrajet' => 'required|string',
+            // 'start' => 'required|timestamp',
+            // 'end' => 'required|timestamp',
+            'start' => 'required|date',
+            'end' => 'required|date',
+
+
+            // 'status' => 'in:active,inactive',
+            'status' => 'in:1,0', // Assuming 1 for 'active' and 0 for 'inactive'
             'route_id' => 'required|exists:routes,id',
             'bus_id' => 'required|exists:buses,id',
-            'agent_id' => 'required|exists:agents,id',
+      'agent_id' => 'required|exists:agents,id',
+
+
+
+
         ]);
 
         // Définit la valeur par défaut du statut à 'active' si non spécifié dans la requête
@@ -41,13 +50,15 @@ class TrajetController extends Controller
     public function update(Request $request, Trajet $trajet)
     {
         $validatedData = $request->validate([
-            'ref' => 'string',
-            'start' => 'timestamp',
-            'end' => 'timestamp',
-            'status' => 'in:active,inactive',
+            'refTrajet' => 'string',
+            'start' => 'date',
+            'end' => 'date',
+            // 'status' => 'in:active,inactive',
+            'status' => 'in:1,0', // Assuming 1 for 'active' and 0 for 'inactive'
             'route_id' => 'exists:routes,id',
             'bus_id' => 'exists:buses,id',
-            'agent_id' => 'exists:agents,id',
+          'agent_id' => 'exists:agents,id',
+
         ]);
 
         // Mise à jour du trajet avec les données validées

@@ -13,13 +13,13 @@ class Trajet extends Model
     use HasFactory;
 
     protected $fillable = [
-        'ref',
+        'refTrajet',
         'start',
         'end',
         'status',
         'route_id',
         'bus_id',
-        'agent_id'
+       'agent_id'
     ];
 
     /**
