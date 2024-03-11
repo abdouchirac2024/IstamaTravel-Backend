@@ -5,20 +5,23 @@ namespace App\Http\Controllers\Api\Auth;
 use App\Models\User;
 use App\Models\Student;
 use App\Mail\WelcomeEmail;
-use App\Services\TwilioService;
+use App\Services\ImageService;
+use Illuminate\Support\Arr;
 
 
-use App\Mail\ResetPasswordNotification;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Services\TwilioService;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Password;
-use Illuminate\Support\Facades\Validator;
+use App\Mail\ResetPasswordNotification;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Password;
 use Laravel\Socialite\Facades\Socialite;
-use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
@@ -69,7 +72,7 @@ class AuthController extends Controller
 
 
         // Envoi de l'e-mail de bienvenue
-         Mail::to($user->email)->send(new WelcomeEmail($student));
+        Mail::to($user->email)->send(new WelcomeEmail($student));
         // Envoyer un SMS de bienvenue
         // $this->sendWelcomeSMS($user->phone, $user->first_name);
 
@@ -226,55 +229,39 @@ class AuthController extends Controller
         if (!$user) {
             return response()->json(['error' => 'Utilisateur non trouvé.'], 404);
         }
-         // Afficher les informations de l'objet `UploadedFile`
-         //dd($request->file('image'));
+
+        // Afficher les informations de l'objet `UploadedFile`
+        // dd($request->file('image'));
         // Validation des données
-        $request->validate([
+        $userData = $request->validate([
             'first_name' => 'required|string',
             'last_name' => 'required|string',
             'phone' => 'required|string',
-            'gender' => 'required|string',
+            // 'gender' => 'required|string',
+
+
             'address' => 'required|string',
-            'image' => 'sometimes|nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'password' => 'nullable|min:6', // Champ password optionnel avec une longueur minimale de 6 caractères
+            'image' => 'nullable|string',
+
+
+            // 'password' => 'required|string', // Champ password optionnel avec une longueur minimale de 6 caractères
         ]);
 
         try {
-            // Données de l'utilisateur
-            $userData = [
-                'first_name' => $request->input('first_name'),
-                'last_name' => $request->input('last_name'),
-                'phone' => $request->input('phone'),
-                'gender' => $request->input('gender'),
-                'address' => $request->input('address'),
-            ];
 
-            // Mise à jour du mot de passe si fourni
-            if ($request->filled('password')) {
-                $userData['password'] = Hash::make($request->input('password'));
-            }
-
-            // Mise à jour des données de l'utilisateur
-            $user->update($userData);
-
-            // Traitement de l'image (si fournie)
-            if ($request->hasFile('image')) {
-                $file = $request->file('image');
-
-                $filename = time() . $file->getClientOriginalName();
-
-                // Stockage de l'image
-                $file->storeAs('public/images', $filename);
+            // Check if image
+            if (!empty($userData['image'])) {
+                $userData['image'] = ImageService::save($userData['image']);
 
                 // Suppression de l'ancienne image si elle existe
                 if ($user->image) {
-                    Storage::delete('public/' . $user->image);
+                    // Storage::delete('public/images/' . $user->image);
+                    $absolutePath = public_path($user->image);
+                    File::delete($absolutePath);
                 }
-
-                // Mise à jour du chemin de l'image
-                $user->image = 'images/' . $filename;
-                $user->save();
             }
+
+            $user->update($userData);
 
             // Réponse JSON
             return response()->json(['message' => 'Profil mis à jour avec succès', 'user' => $user]);
@@ -283,11 +270,4 @@ class AuthController extends Controller
             return response()->json(['error' => 'Une erreur est survenue lors de la mise à jour du profil.'], 500);
         }
     }
-
-
-
-
-    }
-
-
-
+}

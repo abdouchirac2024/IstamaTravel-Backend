@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class StudentResource extends JsonResource
@@ -22,7 +23,7 @@ class StudentResource extends JsonResource
             'email' => optional($this->user)->email,
             'phone' => optional($this->user)->phone,
             'address' => optional($this->user)->address,
-            'image' => optional($this->user)->image,
+            'image' => $this->user->image,
             'active' => optional($this->user)->active,
             'created_at' => $this->created_at->format('Y-m-d h:i:s'),
             'updated_at' => $this->updated_at->format('Y-m-d h:i:s'),

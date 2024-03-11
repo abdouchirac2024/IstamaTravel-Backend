@@ -18,9 +18,17 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 class AgentController extends Controller
 {
+    // public function index()
+    // {
+    //     $agents = Agent::query()->whereNotIn('type_id', [TypeAgentEnum::DRIVER->value])->get();
+
+    //     return AgentResource::collection($agents);
+    // }
+
+
     public function index()
     {
-        $agents = Agent::query()->whereNotIn('type_id', [TypeAgentEnum::DRIVER->value])->get();
+        $agents = Agent::with('type')->whereNotIn('type_id', [TypeAgentEnum::DRIVER->value])->get();
 
         return AgentResource::collection($agents);
     }
