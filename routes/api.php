@@ -90,7 +90,7 @@ Route::middleware(['agent', 'auth:sanctum'])->group(function () {
     // Ressources pour les étudiants
     Route::apiResource('students', StudentController::class);
 
-// BUS
+    // BUS
     Route::get('/buses', [BusController::class, 'index']); // Lister tous les bus
     Route::get('/buses/trashed', [BusController::class, 'indexTrashed']); // Lister tous les bus supprimés
     Route::get('/buses/not-trashed', [BusController::class, 'indexNotTrashed']); // Lister tous les bus non supprimés
@@ -100,15 +100,11 @@ Route::middleware(['agent', 'auth:sanctum'])->group(function () {
     Route::delete('/buses/{bus}', [BusController::class, 'destroy']); // Désactiver un bus (le placer dans la corbeille)
     Route::post('/buses/search', [BusController::class, 'search']); // Rechercher des bus en fonction de critères spécifiques
 
-
     // Routes pour les trajets
-
-
     Route::get('/trajets', [TrajetController::class, 'index']);
     Route::post('/trajets', [TrajetController::class, 'store']);
     Route::get('/trajets/{trajet}', [TrajetController::class, 'show']);
     Route::put('/trajets/{trajet}', [TrajetController::class, 'update']);
     Route::delete('/trajets/{trajet}', [TrajetController::class, 'destroy']);
     Route::post('/trajets/search', [TrajetController::class, 'search']);
-    
 });

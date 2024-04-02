@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Trajet;
 
 class TrajetController extends Controller
@@ -17,14 +18,23 @@ class TrajetController extends Controller
 
     public function store(Request $request)
     {
+        // Récupérez l'agent connecté
+        $loggedInAgent = Auth::user();
+
         $validatedData = $request->validate([
             'refTrajet' => 'required|string',
             'start' => 'required|date',
             'end' => 'required|date',
-            'active' => 'in:1,0',
+            'status' => 'in:1,0', // Assuming 1 for 'active' and 0 for 'inactive'
             'route_id' => 'required|exists:routes,id',
             'bus_id' => 'required|exists:buses,id',
         ]);
+
+        // Définissez l'agent connecté comme agent_id dans les données validées
+        $validatedData['agent_id'] = $loggedInAgent->id;
+
+        // Définit la valeur par défaut du statut à 'active' si non spécifié dans la requête
+        $validatedData['status'] = $request->input('status', 'active');
 
         $trajet = Trajet::create($validatedData);
         return response()->json(['message' => 'Trajet créé avec succès', 'data' => $trajet], 201);
@@ -37,15 +47,22 @@ class TrajetController extends Controller
 
     public function update(Request $request, Trajet $trajet)
     {
+        // Récupérez l'agent connecté
+        $loggedInAgent = Auth::user();
+
         $validatedData = $request->validate([
             'refTrajet' => 'string',
             'start' => 'date',
             'end' => 'date',
-            'active' => 'in:1,0',
+            'status' => 'in:1,0', // Assuming 1 for 'active' and 0 for 'inactive'
             'route_id' => 'exists:routes,id',
             'bus_id' => 'exists:buses,id',
         ]);
 
+        // Définissez l'agent connecté comme agent_id dans les données validées
+        $validatedData['agent_id'] = $loggedInAgent->id;
+
+        // Mise à jour du trajet avec les données validées
         $trajet->update($validatedData);
         return response()->json(['message' => 'Trajet mis à jour avec succès', 'data' => $trajet], 200);
     }
